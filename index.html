@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#11100f" />
+  <meta name="description" content="一个面向 6 位参与者的游戏三个月销量预测投票页。" />
+  <title>《影之刃零》销量预测局</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800;900&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#vote-form">跳到投票表单</a>
+
+  <div class="grain" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="销量预测局首页">
+      <span class="brand-mark">刃</span>
+      <span>销量预测局</span>
+    </a>
+    <button class="ghost-button" id="settings-button" type="button" aria-haspopup="dialog">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm8.7 4.9v-1.8l-2.1-.8a7.8 7.8 0 0 0-.6-1.4l.9-2-1.3-1.3-2 .9a7.8 7.8 0 0 0-1.4-.6L13.4 3h-1.8l-.8 2.1a7.8 7.8 0 0 0-1.4.6l-2-.9-1.3 1.3.9 2a7.8 7.8 0 0 0-.6 1.4l-2.1.8v1.8l2.1.8c.1.5.3 1 .6 1.4l-.9 2 1.3 1.3 2-.9c.4.3.9.5 1.4.6l.8 2.1h1.8l.8-2.1c.5-.1 1-.3 1.4-.6l2 .9 1.3-1.3-.9-2c.3-.4.5-.9.6-1.4l2.1-.8Z"/></svg>
+      设置
+    </button>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> THE SALES FORECAST</p>
+        <h1 id="page-title"><span id="game-title">影之刃零</span><br /><em>销量预测局</em></h1>
+        <p class="hero-description" id="hero-description">6 位玩家，一次判断。猜猜正式发售后 3 个月，全球累计销量会到哪里？</p>
+        <div class="hero-actions">
+          <a class="primary-link" href="#vote-panel">开始落子 <span aria-hidden="true">↘</span></a>
+          <span class="local-note"><i aria-hidden="true"></i> 数据仅保存在当前设备</span>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="moon"></div>
+        <div class="slash slash-one"></div>
+        <div class="slash slash-two"></div>
+        <div class="hero-seal"><strong id="seal-limit">六</strong><span>人之约</span></div>
+        <p>落<br />子<br />无<br />悔</p>
+      </div>
+
+      <div class="progress-card">
+        <div>
+          <p>当前进度</p>
+          <strong><span id="vote-count">0</span><small> / <span id="vote-limit">6</span> 人</small></strong>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="投票完成进度" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progress-track">
+          <span id="progress-fill"></span>
+        </div>
+        <p class="progress-caption" id="progress-caption">等待第一位玩家落子</p>
+      </div>
+    </section>
+
+    <section class="seats-section section-shell" aria-labelledby="seats-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">01 · 预测席位</p>
+          <h2 id="seats-title">六席，静候高见</h2>
+        </div>
+        <p>每人一票。提交后可在当前设备修改，全部完成前不展示具体预测。</p>
+      </div>
+      <div class="seats-grid" id="seats-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="vote-section section-shell" id="vote-panel" aria-labelledby="vote-title">
+      <div class="vote-aside">
+        <p class="section-kicker">02 · 请君落子</p>
+        <h2 id="vote-title">写下你的<br />三月判断</h2>
+        <p id="vote-scope">统一按全球累计销量计算，以“万份”为单位。你可以补一句判断依据，也可以只留下数字。</p>
+        <div class="rule-chip">
+          <span aria-hidden="true">!</span>
+          <p><strong>公平揭晓</strong>全部席位提交后，预测榜与统计数据才会公开。</p>
+        </div>
+      </div>
+
+      <form class="vote-form" id="vote-form" novalidate>
+        <input type="hidden" id="editing-id" />
+        <div class="form-row">
+          <label class="field">
+            <span>你的名字 <b>*</b></span>
+            <input id="voter-name" name="name" type="text" autocomplete="off" maxlength="16" placeholder="输入昵称" required />
+            <small class="field-error" id="name-error"></small>
+          </label>
+          <label class="field">
+            <span><span id="sales-field-label">3 个月累计销量</span> <b>*</b></span>
+            <span class="input-with-unit">
+              <input id="sales-value" name="sales" type="number" inputmode="decimal" min="0.1" max="9999" step="0.1" placeholder="例如：250" required />
+              <i id="unit-label">万份</i>
+            </span>
+            <small class="field-error" id="sales-error"></small>
+          </label>
+        </div>
+
+        <fieldset class="quick-picks">
+          <legend>快速选择</legend>
+          <div id="quick-picks">
+            <button type="button" data-value="50">50 万</button>
+            <button type="button" data-value="100">100 万</button>
+            <button type="button" data-value="150">150 万</button>
+            <button type="button" data-value="200">200 万</button>
+            <button type="button" data-value="300">300 万</button>
+            <button type="button" data-value="500">500 万</button>
+          </div>
+        </fieldset>
+
+        <label class="field">
+          <span>判断依据 <em>选填</em></span>
+          <textarea id="vote-reason" name="reason" rows="3" maxlength="100" placeholder="例如：试玩口碑、平台覆盖、宣发热度……"></textarea>
+          <small class="char-count"><span id="reason-count">0</span> / 100</small>
+        </label>
+
+        <div class="form-footer">
+          <button class="submit-button" id="submit-button" type="submit">锁定我的预测 <span aria-hidden="true">→</span></button>
+          <button class="text-button hidden" id="cancel-edit" type="button">取消修改</button>
+          <p>提交即代表认同本局规则</p>
+        </div>
+      </form>
+    </section>
+
+    <section class="results-section section-shell" aria-labelledby="results-title">
+      <div class="section-heading results-heading">
+        <div>
+          <p class="section-kicker">03 · 预测战况</p>
+          <h2 id="results-title">答案，暂藏锋芒</h2>
+        </div>
+        <div class="result-actions">
+          <button class="ghost-button" id="copy-results" type="button" disabled>复制结果</button>
+          <button class="ghost-button danger" id="reset-votes" type="button">清空本局</button>
+        </div>
+      </div>
+      <div id="results-content" aria-live="polite"></div>
+    </section>
+
+    <section class="rules-section section-shell" aria-labelledby="rules-title">
+      <p class="section-kicker">04 · 本局规则</p>
+      <div class="rules-layout">
+        <h2 id="rules-title">以数字会友，<br />待时间裁决。</h2>
+        <ol>
+          <li><span>壹</span><p><strong>统一口径</strong><span id="rule-scope">目标为正式发售后 3 个月的全球累计销量，统一使用“万份”。</span></p></li>
+          <li><span>贰</span><p><strong>一人一票</strong>姓名不可重复；在当前设备上，可点击自己的席位修改预测。</p></li>
+          <li><span>叁</span><p><strong id="rule-reveal-title">全员揭晓</strong><span id="rule-reveal">全部参与者提交后，自动公开预测榜与平均值、中位数、区间。</span></p></li>
+          <li><span>肆</span><p><strong>误差定胜</strong>待官方数据公布后，以预测值与实际值的绝对误差最小者为胜。</p></li>
+        </ol>
+      </div>
+      <p class="disclaimer">销量预测仅供娱乐，不代表游戏官方数据或立场。</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="brand footer-brand"><span class="brand-mark">刃</span><span>销量预测局</span></div>
+    <p>为朋友间的认真竞猜而作 · <span id="footer-year"></span></p>
+  </footer>
+
+  <dialog id="settings-dialog" class="settings-dialog">
+    <form method="dialog" id="settings-form">
+      <div class="dialog-heading">
+        <div><p class="section-kicker">通用设置</p><h2>定制你的预测局</h2></div>
+        <button class="icon-button" value="cancel" aria-label="关闭设置" type="submit">×</button>
+      </div>
+      <label class="field"><span>游戏名称</span><input id="setting-game" maxlength="30" required /></label>
+      <div class="form-row">
+        <label class="field"><span>预测周期</span><input id="setting-period" maxlength="16" required /></label>
+        <label class="field"><span>参与人数</span><input id="setting-limit" type="number" min="2" max="12" step="1" required /></label>
+      </div>
+      <div class="form-row">
+        <label class="field"><span>销量单位</span><input id="setting-unit" maxlength="8" required /></label>
+        <label class="field"><span>揭晓方式</span>
+          <select id="setting-reveal"><option value="complete">全员提交后揭晓</option><option value="live">实时展示结果</option></select>
+        </label>
+      </div>
+      <p class="dialog-note">修改游戏名称、周期或单位会开启一轮新投票；人数可在不小于已投票人数的前提下调整。</p>
+      <div class="dialog-actions">
+        <button class="text-button" value="cancel" type="submit">取消</button>
+        <button class="submit-button compact" id="save-settings" value="default" type="submit">保存设置</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
